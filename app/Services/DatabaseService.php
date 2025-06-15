@@ -27,6 +27,8 @@ class DatabaseService
             CREATE DATABASE `" . $this->database . "`;
         ";
 
+        sleep(3);
+
         if ($this->db->multi_query($sqlCreateDatabase)) {
 
             while ($this->db->more_results() && $this->db->next_result()) {

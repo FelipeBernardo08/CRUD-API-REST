@@ -6,6 +6,15 @@ class Routes
 {
     protected $routes = [
         [
+            "http_route" => "/migrate",
+            "http_method" => "GET",
+            "method" => "migrate",
+            "dir" => "/../app/Controllers/MigrationController.php",
+            "import" => "MigrationController",
+            "auth" => false,
+            "auth_method" => "",
+        ],
+        [
             "http_route" => "/user/create",
             "http_method" => "POST",
             "method" => "createUser",

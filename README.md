@@ -35,3 +35,19 @@ Execute o seguinte comando no terminal:
 
 ```bash
 docker compose up
+```
+
+---
+
+## 📬 Collection do Postman
+
+Execute a rota migration para criar o banco de dados com suas respectivas tabelas.
+Também utilize para testar outros endpoints da API.
+
+🔗 [Acessar Collection no Postman](https://www.postman.com/altimetry-specialist-72965033/api-php-puro/collection/u5ut6fe/api-php)
+
+---
+
+## 📌 Observações
+
+Este projeto é voltado para fins educacionais e experimentação com boas práticas de desenvolvimento backend utilizando apenas recursos nativos do PHP.
