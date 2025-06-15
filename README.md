@@ -1,11 +1,37 @@
-Projeto de estudo, com objetivo em criar um backend API REST, utilizando PHP puro, evitando bibliotecas externas.
+# 📚 Projeto de Estudo - API REST com PHP Puro
 
-Para buildar o projeto, certifique-se de ter Docker instalado. Caso não tenha, baixe no link a baixo:
-https://docs.docker.com/desktop/?_gl=1*3xu5cx*_gcl_au*NzEyMTkwMTcwLjE3NDQ1OTM4MjM.*_ga*Mjg1NDQzMzU3LjE3NDQ1OTM4MjM.*_ga_XJWPQMJYHQ*czE3NTAwMTI1MTYkbzQkZzEkdDE3NTAwMTI2ODMkajU5JGwwJGgw
+Este é um projeto de estudo com o objetivo de desenvolver uma API REST utilizando **PHP puro**, evitando o uso de bibliotecas ou frameworks externos.
 
-Crie o arquivo .env e configure suas credenciais de acordo com o arquivo .env.example
+---
 
-Rode o projeto com o comando:
+## 🚀 Tecnologias Utilizadas
+
+- PHP (puro)
+- Docker & Docker Compose
+
+---
+
+## ⚙️ Como Rodar o Projeto
+
+### 1. Pré-requisitos
+
+Certifique-se de que o **Docker** está instalado em sua máquina.  
+Caso não tenha, você pode baixá-lo pelo link abaixo:
+
+🔗 [Instalar Docker](https://docs.docker.com/desktop/)
+
+---
+
+### 2. Configuração do Ambiente
+
+Crie um arquivo `.env` na raiz do projeto com base no arquivo de exemplo `.env.example`.  
+Configure suas credenciais conforme necessário.
+
+---
+
+### 3. Iniciando o Projeto
+
+Execute o seguinte comando no terminal:
+
+```bash
 docker compose up
-
-Link da collection do postman:
