@@ -3,82 +3,45 @@
 namespace Routes;
 
 require_once __DIR__ . "/../app/Services/JwtAuth.php";
+require_once __DIR__ . "/../routes/routes.php";
+require_once __DIR__ . "/../app/Services/ResponseHttpService.php";
 
 use App\Services\JwtAuth;
-use DateTime;
+use Routes\Routes;
+use App\Services\ResponseHttpService;
 
 class Api
 {
     private $requestUri;
     private $requestMethod;
+    private $routes;
+    private $responseHttpService;
 
-    protected $routeRules = [
-        [
-            "http_route" => "/user/create",
-            "http_method" => "POST",
-            "method" => "createUser",
-            "dir" => "/../app/Controllers/UserController.php",
-            "import" => "UserController",
-            "auth" => false,
-            "auth_method" => "",
-        ],
-        [
-            "http_route" => "/user/login",
-            "http_method" => "POST",
-            "method" => "login",
-            "dir" => "/../app/Controllers/UserController.php",
-            "import" => "UserController",
-            "auth" => false,
-            "auth_method" => "",
-        ],
-        [
-            "http_route" => "/user/read",
-            "http_method" => "GET",
-            "method" => "readUser",
-            "dir" => "/../app/Controllers/UserController.php",
-            "import" => "UserController",
-            "auth" => true,
-            "auth_method" => "jwt",
-        ],
-        [
-            "http_route" => "/user/update",
-            "http_method" => "PUT",
-            "method" => "updateUser",
-            "dir" => "/../app/Controllers/UserController.php",
-            "import" => "UserController",
-            "auth" => true,
-            "auth_method" => "jwt",
-        ]
-    ];
+    protected $routeRules = [];
 
     public function __construct(string $uri, string $method)
     {
         $this->requestUri = $uri;
         $this->requestMethod = $method;
+        $this->routes = new Routes();
+        $this->responseHttpService = new ResponseHttpService();
     }
 
     public function index(): void
     {
         try {
+            $this->routeRules = $this->routes->getRoutes();
             $route = $this->findRoute($this->requestUri);
 
             if (empty($route)) {
                 $msg = "Endpoint não encontrado!";
-                $responseData = [
-                    "success" => false,
-                    "error" => $msg
-                ];
-                $this->responseHttp($responseData, 404);
+                $this->responseHttpService->notFound($msg);
                 return;
             }
 
             if (strtolower($route["http_method"]) != strtolower($this->requestMethod)) {
                 $msg = "Método HTTP incorreto. Rota aceita: " . $route["http_method"] . ".";
-                $responseData = [
-                    "success" => false,
-                    "error" => $msg
-                ];
-                $this->responseHttp($responseData, 404);
+                $this->responseHttpService->badRequest($msg);
                 return;
             }
 
@@ -88,11 +51,7 @@ class Api
 
             if (!class_exists($className)) {
                 $msg = "Classe não encontrada!";
-                $responseData = [
-                    "success" => false,
-                    "error" => $msg
-                ];
-                $this->responseHttp($responseData, 404);
+                $this->responseHttpService->badGateway($msg);
                 return;
             }
 
@@ -102,11 +61,7 @@ class Api
                 $headers = getallheaders();
                 if (!isset($headers["Authorization"])) {
                     $msg = "Token não fornecido!";
-                    $responseData = [
-                        "success" => false,
-                        "error" => $msg
-                    ];
-                    $this->responseHttp($responseData, 401);
+                    $this->responseHttpService->unauthorized($msg);
                     return;
                 }
 
@@ -116,11 +71,7 @@ class Api
 
                 if (empty($authUser)) {
                     $msg = "Token inválido ou expirado!";
-                    $responseData = [
-                        "success" => false,
-                        "error" => $msg
-                    ];
-                    $this->responseHttp($responseData, 401);
+                    $this->responseHttpService->unauthorized($msg);
                     return;
                 }
             }
@@ -133,46 +84,23 @@ class Api
 
             $body["authUser"] = $authUser;
 
-            $result = [];
-
             $result = $controller->$method($body);
 
             if (empty($result)) {
                 $msg = "Erro inesperado, tente novamente mais tarde!";
-                $responseData = [
-                    "success" => false,
-                    "error" => $msg
-                ];
-
-                $this->responseHttp($responseData, 500);
+                $this->responseHttpService->badGateway($msg);
                 return;
             }
 
             if (!$result["success"]) {
-                $responseData = [
-                    "success" => false,
-                    "error" => $result["error"]
-                ];
-
-                $this->responseHttp($responseData, 404);
+                $this->responseHttpService->notFound($result["error"]);
                 return;
             }
 
-            $responseData = [
-                "success" => true,
-                "data" => $result["data"],
-            ];
-
-
-            $this->responseHttp($responseData, 200);
+            $this->responseHttpService->responseOk($result["data"]);
             return;
         } catch (\Throwable $th) {
-            $dataResponse = [
-                "success" => false,
-                "error" => $th->getMessage()
-            ];
-
-            $this->responseHttp($dataResponse, 500);
+            $this->responseHttpService->badGateway($th->getMessage());
             return;
         }
     }
@@ -192,13 +120,6 @@ class Api
         $data = json_decode($body, true);
 
         return $data ?? [];
-    }
-
-    private function responseHttp(array $data, int $status): void
-    {
-        http_response_code($status);
-        header("Content-Type: application/json");
-        echo json_encode($data);
     }
 
     private function verifyAuth(string $token): array

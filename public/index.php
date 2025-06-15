@@ -10,6 +10,6 @@ use Routes\Api;
 
 Env::loadEnv();
 
-$route = new Api(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), $_SERVER['REQUEST_METHOD']);
+$route = new Api(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH), $_SERVER["REQUEST_METHOD"]);
 
 $route->index();

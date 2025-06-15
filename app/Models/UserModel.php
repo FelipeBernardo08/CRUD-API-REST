@@ -26,9 +26,9 @@ class UserModel
             INSERT INTO
                 users (name, email, password, created_at, updated_at)
             VALUES (
-            '" . $data['name'] . "',
-            '" . $data['email'] . "',
-            '" . password_hash($data['password'], PASSWORD_BCRYPT) . "',
+            '" . $data["name"] . "',
+            '" . $data["email"] . "',
+            '" . password_hash($data["password"], PASSWORD_BCRYPT) . "',
             '" . date("Y-m-d H:i:s") . "',
             '" . date("Y-m-d H:i:s") . "'
         )";
@@ -56,5 +56,33 @@ class UserModel
         $row = $response->fetch_assoc();
 
         return $row;
+    }
+
+    public function updateUser(int $userId, array $dataUpdate): bool
+    {
+        $sql = "
+            UPDATE
+                users
+            SET
+        ";
+
+        if (isset($dataUpdate["name"])) {
+            $sql .= "
+                name = '" . $dataUpdate["name"] . "'
+            ";
+        }
+
+        if (isset($dataUpdate["password"])) {
+            $sql .= ",
+                password = '" . $dataUpdate["password"] . "'
+            ";
+        }
+
+        $sql .= "
+            WHERE
+                id = " . $userId . "
+        ";
+
+        return $this->dbService->query($sql);
     }
 }

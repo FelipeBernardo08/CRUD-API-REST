@@ -22,21 +22,21 @@ class UserController
 
     public function createUser(array $request): array
     {
-        if (!isset($request['email']) || !isset($request['password']) || !isset($request['name'])) {
+        if (!isset($request["email"]) || !isset($request["password"]) || !isset($request["name"])) {
             return [
                 "success" => false,
                 "error" => "Payload incorreto!"
             ];
         }
 
-        if (!filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($request["email"], FILTER_VALIDATE_EMAIL)) {
             return [
                 "success" => false,
                 "error" => "E-mail inválido!"
             ];
         }
 
-        if (!empty($this->userModel->getUserByEmail($request['email']))) {
+        if (!empty($this->userModel->getUserByEmail($request["email"]))) {
             return [
                 "success" => false,
                 "error" => "E-mail já cadastrado!"
@@ -62,14 +62,14 @@ class UserController
 
     public function login(array $request): array
     {
-        if (!isset($request['email']) || !isset($request['password'])) {
+        if (!isset($request["email"]) || !isset($request["password"])) {
             return [
                 "success" => false,
                 "error" => "Payload incorreto!"
             ];
         }
 
-        if (!filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($request["email"], FILTER_VALIDATE_EMAIL)) {
             return [
                 "success" => false,
                 "error" => "E-mail inválido!"
@@ -85,7 +85,7 @@ class UserController
             ];
         }
 
-        if (!password_verify($request['password'], $resultUser['password'])) {
+        if (!password_verify($request["password"], $resultUser["password"])) {
             return [
                 "success" => false,
                 "error" => "Senha incorreta!"
@@ -96,7 +96,7 @@ class UserController
         $date->modify("+ 1 hour");
         $dateFormat = $date->format("Y-m-d H:i:s");
 
-        $resultUser['exp'] = $dateFormat;
+        $resultUser["exp"] = $dateFormat;
 
         $token = $this->jwtAuthService->createToken($resultUser);
 
@@ -110,15 +110,32 @@ class UserController
 
     public function readUser(array $request): array
     {
+        $respUser = $this->userModel->getUserByEmail($request["authUser"]["email"]);
+
         return [
             "success" => true,
-            "data" => $request["authUser"]
+            "data" => $respUser
         ];
     }
 
     public function updateUser(array $request): array
     {
+        $userId = $request["authUser"]["id"];
 
-        return [];
+        $responseUpdate = $this->userModel->updateUser($userId, $request);
+
+        if (!$responseUpdate) {
+            return [
+                "success" => false,
+                "error" => "Erro ao atualizar, tente novamente mais tarde!"
+            ];
+        }
+
+        return [
+            "success" => true,
+            "data" => [
+                "message" => "Dados atualizados com sucesso!"
+            ]
+        ];
     }
 }
