@@ -2,16 +2,11 @@
 
 namespace App\Controllers;
 
-require_once __DIR__ . "/../Services/DatabaseService.php";
-require_once __DIR__ . "/../Services/ResponseHttpService.php";
-
 use App\Services\DatabaseService;
-use App\Services\ResponseHttpService;
 
 class MigrationController
 {
     private $dbService;
-    private $responseHttpService;
 
     public function __construct()
     {
@@ -21,7 +16,6 @@ class MigrationController
         $database = getenv("DB_DATABASE");
 
         $this->dbService = new DatabaseService($host, $user, $pass, $database);
-        $this->responseHttpService = new ResponseHttpService();
     }
 
     public function migrate(): array

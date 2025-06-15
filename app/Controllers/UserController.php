@@ -2,9 +2,6 @@
 
 namespace App\Controllers;
 
-require_once __DIR__ . "/../Models/UserModel.php";
-require_once __DIR__ . '/../../app/Services/JwtAuth.php';
-
 use App\Models\UserModel;
 use App\Services\JwtAuth;
 use DateTime;

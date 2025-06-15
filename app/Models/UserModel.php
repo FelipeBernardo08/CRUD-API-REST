@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-require_once __DIR__ . "/../../app/Services/DatabaseService.php";
-
 use App\Services\DatabaseService;
 
 class UserModel
