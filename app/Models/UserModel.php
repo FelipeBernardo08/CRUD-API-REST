@@ -24,11 +24,11 @@ class UserModel
             INSERT INTO
                 users (name, email, password, created_at, updated_at)
             VALUES (
-            '" . $this->dbService->escape($data["name"]) . "',
-            '" . $this->dbService->escape($data["email"]) . "',
-            '" . password_hash($this->dbService->escape($data["password"]), PASSWORD_BCRYPT) . "',
-            '" . date("Y-m-d H:i:s") . "',
-            '" . date("Y-m-d H:i:s") . "'
+                '" . $this->dbService->escape($data["name"]) . "',
+                '" . $this->dbService->escape($data["email"]) . "',
+                '" . password_hash($this->dbService->escape($data["password"]), PASSWORD_BCRYPT) . "',
+                '" . date("Y-m-d H:i:s") . "',
+                '" . date("Y-m-d H:i:s") . "'
         )";
 
         return $this->dbService->query($sql);

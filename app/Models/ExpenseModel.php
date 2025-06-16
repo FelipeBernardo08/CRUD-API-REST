@@ -21,11 +21,15 @@ class ExpenseModel
     public function createExpense(int $userId, array $data): bool
     {
         $sql = "
-            INSERT INTO expenses
-            (title, amount, user_id, created_at, updated_at)
-            VALUES
-            ('" . $this->dbService->escape($data["title"]) . "', '" . $this->dbService->escape($data['amount']) . "', '" . $this->dbService->escape($userId) . "', '" . date("Y-m-d H:i:s") . "', '" . date("Y-m-d H:i:s") . "')
-        ";
+            INSERT INTO
+                expenses (title, amount, user_id, created_at, updated_at)
+            VALUES (
+                '" . $this->dbService->escape($data["title"]) . "',
+                '" . $this->dbService->escape($data['amount']) . "',
+                '" . $this->dbService->escape($userId) . "',
+                '" . date("Y-m-d H:i:s") . "',
+                '" . date("Y-m-d H:i:s") . "'
+        )";
 
         return $this->dbService->query($sql);
     }
