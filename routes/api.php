@@ -2,10 +2,6 @@
 
 namespace Routes;
 
-require_once __DIR__ . "/../app/Services/JwtAuth.php";
-require_once __DIR__ . "/../routes/routes.php";
-require_once __DIR__ . "/../app/Services/ResponseHttpService.php";
-
 use App\Services\JwtAuth;
 use Routes\Routes;
 use App\Services\ResponseHttpService;
@@ -44,8 +40,6 @@ class Api
                 $this->responseHttpService->badRequest($msg);
                 return;
             }
-
-            require_once __DIR__ . $route["dir"];
 
             $className = "App\\Controllers\\" . $route["import"];
 

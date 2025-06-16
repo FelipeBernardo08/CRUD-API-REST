@@ -115,9 +115,26 @@ class UserController
         ];
     }
 
+    public function readUserWithExpense(array $request): array
+    {
+        $respUserComplete = $this->userModel->getUserWithExpenseByEmail($request["authUser"]["email"]);
+
+        return [
+            "success" => true,
+            "data" => $respUserComplete
+        ];
+    }
+
     public function updateUser(array $request): array
     {
         $userId = $request["authUser"]["id"];
+
+        if (!isset($request["name"]) && !isset($request["password"])) {
+            return [
+                "success" => false,
+                "error" => "Payload incorreto!"
+            ];
+        }
 
         $responseUpdate = $this->userModel->updateUser($userId, $request);
 
