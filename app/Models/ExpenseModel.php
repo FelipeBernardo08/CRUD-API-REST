@@ -24,7 +24,7 @@ class ExpenseModel
             INSERT INTO expenses
             (title, amount, user_id, created_at, updated_at)
             VALUES
-            ('" . $data["title"] . "', '" . $data['amount'] . "', '" . $userId . "', '" . date("Y-m-d H:i:s") . "', '" . date("Y-m-d H:i:s") . "')
+            ('" . $this->dbService->escape($data["title"]) . "', '" . $this->dbService->escape($data['amount']) . "', '" . $this->dbService->escape($userId) . "', '" . date("Y-m-d H:i:s") . "', '" . date("Y-m-d H:i:s") . "')
         ";
 
         return $this->dbService->query($sql);
@@ -40,13 +40,13 @@ class ExpenseModel
 
         if (isset($data["amount"])) {
             $sql .= "
-                amount = '" . $data["amount"] . "',
+                amount = '" . $this->dbService->escape($data["amount"]) . "',
             ";
         }
 
         if (isset($data["title"])) {
             $sql .= "
-                title = '" . $data["title"] . "',
+                title = '" . $this->dbService->escape($data["title"]) . "',
             ";
         }
 
@@ -55,7 +55,7 @@ class ExpenseModel
             WHERE
                 user_id = '" . $userId . "'
             AND
-                id = '" . $data["id"] . "'
+                id = '" . $this->dbService->escape($data["id"]) . "'
         ";
 
         return $this->dbService->query($sql);
@@ -69,7 +69,7 @@ class ExpenseModel
             WHERE
                 user_id = '" . $userId . "'
             AND
-                id = '" . $id . "'
+                id = '" . $this->dbService->escape($id) . "'
         ";
 
         return $this->dbService->query($sql);

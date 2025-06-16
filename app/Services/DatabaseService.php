@@ -17,7 +17,14 @@ class DatabaseService
 
     public function query(string $sql): mixed
     {
+
         return $this->db->query($sql);
+    }
+
+
+    public function escape(string $data): string
+    {
+        return $this->db->escape_string($data);
     }
 
     public function migration(): void

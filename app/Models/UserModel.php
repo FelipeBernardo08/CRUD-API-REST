@@ -24,9 +24,9 @@ class UserModel
             INSERT INTO
                 users (name, email, password, created_at, updated_at)
             VALUES (
-            '" . $data["name"] . "',
-            '" . $data["email"] . "',
-            '" . password_hash($data["password"], PASSWORD_BCRYPT) . "',
+            '" . $this->dbService->escape($data["name"]) . "',
+            '" . $this->dbService->escape($data["email"]) . "',
+            '" . password_hash($this->dbService->escape($data["password"]), PASSWORD_BCRYPT) . "',
             '" . date("Y-m-d H:i:s") . "',
             '" . date("Y-m-d H:i:s") . "'
         )";
@@ -42,7 +42,7 @@ class UserModel
             FROM
                 users
             WHERE
-                email = '" . $email . "'
+                email = '" . $this->dbService->escape($email) . "'
         ";
 
         $response = $this->dbService->query($sql);
@@ -72,7 +72,7 @@ class UserModel
             ON
                 u.id = ex.user_id
             WHERE
-                email = '" . $email . "'
+                email = '" . $this->dbService->escape($email) . "'
         ";
 
         $response = $this->dbService->query($sql);
@@ -115,13 +115,13 @@ class UserModel
 
         if (isset($dataUpdate["name"])) {
             $sql .= "
-                name = '" . $dataUpdate["name"] . "',
+                name = '" . $this->dbService->escape($dataUpdate["name"]) . "',
             ";
         }
 
         if (isset($dataUpdate["password"])) {
             $sql .= "
-                password = '" . $dataUpdate["password"] . "',
+                password = '" . $this->dbService->escape($dataUpdate["password"]) . "',
             ";
         }
 
